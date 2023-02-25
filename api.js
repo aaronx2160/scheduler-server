@@ -5,7 +5,7 @@ const timezone = require('dayjs/plugin/timezone')
 var localeData = require('dayjs/plugin/localeData')
 const conn = require('./db')
 const CyclicDb = require('@cyclic.sh/dynamodb')
-const db = CyclicDb('apricot-penguin-wearCyclicDB')
+const db = CyclicDb('calm-puce-mackerel-robeCyclicDB')
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
