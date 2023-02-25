@@ -1,9 +1,12 @@
+const path = require('path')
 const axios = require('axios')
 const dayjs = require('dayjs')
 const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone')
 var localeData = require('dayjs/plugin/localeData')
 const conn = require('./db')
+
+
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -29,7 +32,7 @@ const officeHoursStr = [
 const api = (app) => {
   app.get('/', async (req, res) => {
     try {
-      res.send('hi')
+      res.sendFile(path.join(__dirname, 'public', 'index.html'))
     } catch (error) {
       console.log(error)
     }
