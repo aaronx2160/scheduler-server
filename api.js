@@ -6,8 +6,6 @@ const timezone = require('dayjs/plugin/timezone')
 var localeData = require('dayjs/plugin/localeData')
 const conn = require('./db')
 
-
-
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(localeData)
@@ -30,7 +28,7 @@ const officeHoursStr = [
 ]
 
 const api = (app) => {
-  app.get('/', async (req, res) => {
+  app.get('/*', async (req, res) => {
     try {
       res.sendFile(path.join(__dirname, 'public', 'index.html'))
     } catch (error) {
