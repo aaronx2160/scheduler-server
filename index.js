@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 api(app)
-
+const PORT = process.env.PORT || 4000
 app.listen(4000, () => {
-  console.log(`booking app listening on port 4000`)
+  console.log(`booking app listening on port ${PORT}`)
 })

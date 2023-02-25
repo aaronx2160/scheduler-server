@@ -4,6 +4,8 @@ const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone')
 var localeData = require('dayjs/plugin/localeData')
 const conn = require('./db')
+const CyclicDb = require('@cyclic.sh/dynamodb')
+const db = CyclicDb('apricot-penguin-wearCyclicDB')
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -27,6 +29,20 @@ const officeHoursStr = [
 ]
 
 const api = (app) => {
+  app.get('/', async (req, res) => {
+    try {
+      const animals = db.collection('animals')
+      let leo = await animals.set('leo', {
+        type: 'cat',
+        color: 'orange',
+      })
+      let item = await animals.get('leo')
+      console.log(item)
+      res.send(JSON.stringify(item))
+    } catch (error) {
+      console.log(error)
+    }
+  })
   //login page, get agents list
   app.get('/agents', async (req, res) => {
     try {
@@ -146,7 +162,7 @@ const api = (app) => {
     }
   })
 
-  app.get('/remotes/:agentName', (req, res) => {
+  app.get('/remotes/:agentName', async (req, res) => {
     try {
       console.log(req.params)
       const { agentName } = req.params
