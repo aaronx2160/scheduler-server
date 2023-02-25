@@ -28,7 +28,7 @@ const officeHoursStr = [
 ]
 
 const api = (app) => {
-  app.get('/*', async (req, res) => {
+  app.get('/page/*', async (req, res) => {
     try {
       res.sendFile(path.join(__dirname, 'public', 'index.html'))
     } catch (error) {
