@@ -50,6 +50,26 @@ const api = (app) => {
       res.send(error)
     }
   })
+
+  app.post('/login', (req, res) => {
+    try {
+      let { agent, password } = req.body
+      const sql = 'select password from agents where ?? =?'
+      conn(sql, ['name', agent], (err, ress) => {
+        if (err) {
+          console.log(err)
+        } else {
+          if (password === ress[0]['password']) {
+            res.send(agent)
+          } else {
+            res.send('error')
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  })
   //initial page load
   app.get('/:ticketNum/:agent/*', async (req, res) => {
     userTimeZone = req.params[0]
@@ -65,9 +85,6 @@ const api = (app) => {
       let dateObj = dayjs(date)
       const clientTime = dayjs.tz(dateObj, userTimeZone)
       const halifaxTime = dayjs.tz(dateObj, 'America/Halifax')
-
-      console.log(clientTime.get('date'))
-      console.log(halifaxTime.get('date'))
 
       officeHoursConverted.length = 0
       let d = 0
@@ -145,7 +162,7 @@ const api = (app) => {
           if (err) {
             console.log(err)
           } else {
-            res.send(req.body)
+            res.send({ msg: 'ok' })
           }
         }
       )
@@ -153,12 +170,27 @@ const api = (app) => {
       res.send(error)
     }
   })
-
+  app.post('/ticketNum', (req, res) => {
+    try {
+      let { ticketNum } = req.body
+      const sql = 'select * from remotes where ?? =?'
+      conn(sql, ['ticketNum', ticketNum], (err, ress) => {
+        if (err) {
+          res.send(err)
+        } else {
+          res.send(ress)
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  })
   app.get('/remotes/:agentName', async (req, res) => {
     try {
       console.log(req.params)
       const { agentName } = req.params
-      const sql = 'select * from remotes where agentName =? order by id DESC'
+      const sql =
+        'select * from remotes where agentName =? order by id DESC limit 10'
 
       conn(sql, [agentName], (err, ress) => {
         if (err) {
@@ -188,23 +220,3 @@ const api = (app) => {
 }
 
 module.exports = { api }
-
-const toFormatTime = (openHrsArr) => {
-  let openHoursFormatted = []
-  let placeholderArr = []
-  for (let i = 0; i < openHrsArr.length; i++) {
-    if (openHrsArr[i] < 12) {
-      openHoursFormatted.push(openHrsArr[i] + ':00 AM')
-    } else if (openHrsArr[i] > 12 && openHrsArr[i] < 24) {
-      openHoursFormatted.push(openHrsArr[i] - 12 + ':00 PM')
-    } else if (openHrsArr[i] == 12) {
-      openHoursFormatted.push(openHrsArr[i] + ':00 PM')
-    } else if (openHrsArr[i] == 24) {
-      openHoursFormatted.push('00:00 AM')
-    } else if (openHrsArr[i] > 24) {
-      placeholderArr.push(openHrsArr[i] - 24 + ':00 AM')
-    }
-  }
-
-  return [...placeholderArr, ...openHoursFormatted]
-}
