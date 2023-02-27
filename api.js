@@ -45,7 +45,7 @@ const api = (app) => {
       console.log(req.params)
       agentNameParam = req.params.agentName
       ticketNumParam = req.params.ticketNum
-      res.sendFile(path.join(__dirname, 'public', 'index.html'))
+      res.sendFile(path.join(__dirname, 'build', 'index.html'))
     } catch (error) {
       console.log(error)
     }
