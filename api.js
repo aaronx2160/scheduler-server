@@ -10,7 +10,6 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(localeData)
 
-// let userTimeZone = ''
 const officeHoursConverted = []
 const officeHoursStr = [
   '09',
@@ -87,12 +86,12 @@ const api = (app) => {
     }
   })
   //initial page load
-  app.get('/:ticketNum/:agent/*', async (req, res) => {
-    userTimeZone = req.params[0]
-
-    let agent1 = { name: 'aaron', password: 'abc123' }
-
-    res.send(req.params)
+  app.get('/initialData', async (req, res) => {
+    try {
+      res.send({ agentNameParam, ticketNumParam })
+    } catch (error) {
+      res.send(error)
+    }
   })
 
   app.post('/date', (req, res) => {
@@ -105,14 +104,13 @@ const api = (app) => {
 
       officeHoursConverted.length = 0
       let d = 0
+
       clientTime.get('date') > halifaxTime.get('date')
         ? (d = halifaxTime.get('date') + 1)
         : (d = halifaxTime.get('date'))
-      //   let d = dateObj.get('date')
+
       let month = parseInt(halifaxTime.get('month') + 1)
       let year = halifaxTime.get('year')
-
-      //   d = halifaxTime.get('date')
 
       for (let i = 0; i < officeHoursStr.length; i++) {
         let d1 = dayjs.tz(
@@ -135,18 +133,22 @@ const api = (app) => {
     try {
       const { time, agent, ticketNum, userTimeZone } = req.body
 
-      let dateObj = dayjs('2023 ' + time)
+      // let dateObj = dayjs('2023 ' + time)
+      let dateObj = dayjs.tz('2023' + time, userTimeZone)
+
       const userTime = dayjs
         .tz(dateObj, userTimeZone)
         .format('MMM-DD-YYYY HH:mm:ss A')
+      console.log({ userTime })
       const halifaxTime = dayjs
         .tz(dateObj, 'America/Halifax')
         .format('MMM-DD-YYYY HH:mm:ss A')
-
+      console.log({ halifaxTime })
       let timeReceived = dayjs()
         .tz('America/Halifax')
         .format('MMM-DD-YYYY HH:mm:ss A')
-      console.log(timeReceived)
+
+      console.log({ timeReceived })
 
       let remote = {
         userTime,
@@ -211,12 +213,14 @@ const api = (app) => {
 
       conn(sql, [agentName], (err, ress) => {
         if (err) {
-          console.log(err)
+          res.send(err)
         } else {
           res.send(ress)
         }
       })
-    } catch (error) {}
+    } catch (error) {
+      res.send(error)
+    }
   })
 
   app.post('/remotes/status', (req, res) => {
