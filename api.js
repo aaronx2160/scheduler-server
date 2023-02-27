@@ -10,7 +10,7 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(localeData)
 
-let userTimeZone = ''
+// let userTimeZone = ''
 const officeHoursConverted = []
 const officeHoursStr = [
   '09',
@@ -26,15 +26,31 @@ const officeHoursStr = [
   '19',
   '20',
 ]
+let agentNameParam = ''
+let ticketNumParam = ''
 
 const api = (app) => {
   app.get('/page/*', async (req, res) => {
     try {
+      res.sendFile(path.join(__dirname, 'build', 'index.html'))
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
+  app.get('/client/:agentName/:ticketNum', async (req, res) => {
+    agentNameParam = ''
+    ticketNumParam = ''
+    try {
+      console.log(req.params)
+      agentNameParam = req.params.agentName
+      ticketNumParam = req.params.ticketNum
       res.sendFile(path.join(__dirname, 'public', 'index.html'))
     } catch (error) {
       console.log(error)
     }
   })
+
   //login page, get agents list
   app.get('/agents', async (req, res) => {
     try {
@@ -81,9 +97,10 @@ const api = (app) => {
 
   app.post('/date', (req, res) => {
     try {
-      let { date } = req.body
+      console.log(req.body)
+      let { date, UserTimezone } = req.body
       let dateObj = dayjs(date)
-      const clientTime = dayjs.tz(dateObj, userTimeZone)
+      const clientTime = dayjs.tz(dateObj, UserTimezone)
       const halifaxTime = dayjs.tz(dateObj, 'America/Halifax')
 
       officeHoursConverted.length = 0
@@ -104,11 +121,11 @@ const api = (app) => {
         )
         let timestamp = dayjs.utc(d1, 'YYYY-MM-DD HH:mm:ss')
 
-        timestamp = dayjs(timestamp).tz(userTimeZone)
+        timestamp = dayjs(timestamp).tz(UserTimezone)
         officeHoursConverted.push(timestamp.format('MMM D, hh:mm A'))
       }
 
-      res.send({ officeHoursConverted })
+      res.send({ officeHoursConverted, agentNameParam, ticketNumParam })
     } catch (error) {
       res.send(error)
     }
