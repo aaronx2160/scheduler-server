@@ -5,6 +5,8 @@ const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone')
 var localeData = require('dayjs/plugin/localeData')
 const conn = require('./db')
+const RouterGuard = require('./RouterGuard')
+const generateToken = require('./token')
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -88,7 +90,8 @@ const api = (app) => {
   //initial page load
   app.get('/initialData', async (req, res) => {
     try {
-      res.send({ agentNameParam, ticketNumParam })
+      const token = generateToken()
+      res.send({ agentNameParam, ticketNumParam, token })
     } catch (error) {
       res.send(error)
     }
@@ -130,6 +133,8 @@ const api = (app) => {
   })
 
   app.post('/remote', async (req, res) => {
+    let routerGuard = new RouterGuard()
+    console.log(routerGuard)
     try {
       const { time, agent, ticketNum, userTimeZone } = req.body
 

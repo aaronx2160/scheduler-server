@@ -11,7 +11,7 @@ app.use(bodyParser.json())
 app.use(express.static('build'))
 
 api(app)
-const PORT = process.env.PORT || 80
+const PORT = process.env.PORT || 4000
 app.listen(PORT, () => {
   console.log(`booking app listening on port ${PORT}`)
 })
