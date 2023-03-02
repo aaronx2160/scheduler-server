@@ -13,10 +13,6 @@ export const getInitialData = (token) =>
       console.log(err);
     });
 
-// export const test = (agentName, ticketNum)=>axios.get(`client/${agentName}/${ticketNum}`).then(data=>{
-//     return data.data
-// })
-
 export const getAgents = () =>
   axios
     .get("agents")

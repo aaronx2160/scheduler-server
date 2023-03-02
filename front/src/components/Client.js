@@ -70,24 +70,10 @@ function Client() {
       setAgent(data.agentNameParam);
       setTicketNum(data.ticketNumParam);
       setCookie("token", data.token, { path: "/", maxAge: 3600 });
-      // setAgent('Aaron')
-      // setTicketNum('123456')
+      setAgent("Aaron");
+      setTicketNum("123456");
     });
-  }, [cookies.token, setCookie]);
-
-  //cleanup
-  //   React.useEffect(() => {
-  //     testApi().then((data) => {
-  //       console.log(data);
-  //     });
-  //     return () => {
-  //       // cancel the subscription
-  //       console.log("cleanup");
-  //       testApi().then((data) => {
-  //         console.log(data);
-  //       });
-  //     };
-  //   }, []);
+  }, []);
 
   const handleDateChange = (newDate) => {
     setHidden(true);
@@ -113,8 +99,13 @@ function Client() {
   };
   const handleSubmit = () => {
     if (time === "") {
-      // alert('Please select a start time')
-      setError("Please select a start time");
+      setError("Please select a start time!");
+      setHidden(false);
+      return;
+    }
+
+    if (agent === "" || ticketNum === "") {
+      setError("Invalid agent name or ticket number!");
       setHidden(false);
       return;
     }

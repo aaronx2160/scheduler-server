@@ -52,8 +52,10 @@ const api = (app) => {
           res.sendFile(path.join(__dirname, "build", "index.html"));
         } else {
           if (selectAllTokensRes.length > 0) {
+            console.log(1);
             selectAllTokensRes.map((item) => {
               if (currentTime - item["submitTime"] > 86400000) {
+                console.log(2);
                 const delOldTokensSql = "delete from tokens where id =?";
                 conn(
                   delOldTokensSql,
@@ -66,8 +68,10 @@ const api = (app) => {
                 );
               }
             });
+            console.log(3);
             res.sendFile(path.join(__dirname, "build", "index.html"));
           } else {
+            console.log(4);
             res.sendFile(path.join(__dirname, "build", "index.html"));
           }
         }
@@ -151,7 +155,7 @@ const api = (app) => {
         }
       });
     } catch (error) {
-      res.send(error);
+      console.log(error);
     }
   });
 
