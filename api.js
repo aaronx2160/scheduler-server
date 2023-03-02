@@ -26,8 +26,8 @@ const officeHoursStr = [
   "19",
   "20",
 ];
-let agentNameParam = "Aaron";
-let ticketNumParam = "11111";
+let agentNameParam = "";
+let ticketNumParam = "";
 
 const api = (app) => {
   app.get("/page/*", async (req, res) => {

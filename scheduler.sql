@@ -1,46 +1,52 @@
-/*
- Navicat Premium Data Transfer
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+--
+-- Host: localhost    Database: scheduler
+-- ------------------------------------------------------
+-- Server version	8.0.32
 
- Source Server         : localhost_3306
- Source Server Type    : MySQL
- Source Server Version : 80026
- Source Host           : localhost:3306
- Source Schema         : scheduler
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
- Target Server Type    : MySQL
- Target Server Version : 80026
- File Encoding         : 65001
+--
+-- Table structure for table `agents`
+--
 
- Date: 27/02/2023 06:48:56
-*/
-
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for agents
--- ----------------------------
 DROP TABLE IF EXISTS `agents`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `agents` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of agents
--- ----------------------------
-BEGIN;
-INSERT INTO `agents` VALUES (1, 'Aaron', 'sophos');
-INSERT INTO `agents` VALUES (2, 'Kristina', 'sophos');
-INSERT INTO `agents` VALUES (3, 'Bradley', 'sophos');
-COMMIT;
+--
+-- Dumping data for table `agents`
+--
 
--- ----------------------------
--- Table structure for remotes
--- ----------------------------
+LOCK TABLES `agents` WRITE;
+/*!40000 ALTER TABLE `agents` DISABLE KEYS */;
+INSERT INTO `agents` VALUES (1,'Aaron','sophos'),(2,'Kristina','sophos'),(3,'Bradley','sophos');
+/*!40000 ALTER TABLE `agents` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `remotes`
+--
+
 DROP TABLE IF EXISTS `remotes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `remotes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ticketNum` int DEFAULT NULL,
@@ -51,37 +57,52 @@ CREATE TABLE `remotes` (
   `timeReceived` varchar(255) DEFAULT NULL,
   `status` int DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of remotes
--- ----------------------------
-BEGIN;
-INSERT INTO `remotes` VALUES (1, 100866, 'Aaron', 'Feb-20-2023 09:00:00 AM', 'Feb-20-2023 21:00:00 PM', 'Asia/Shanghai', 'Feb-20-2023 12:11:20 PM', 1);
-INSERT INTO `remotes` VALUES (2, 100866, 'Aaron', 'Feb-23-2023 13:00:00 PM', 'Feb-24-2023 01:00:00 AM', 'Asia/Shanghai', 'Feb-20-2023 12:12:16 PM', 0);
-INSERT INTO `remotes` VALUES (3, 100866, 'Aaron', 'Feb-27-2023 19:00:00 PM', 'Feb-28-2023 07:00:00 AM', 'Asia/Shanghai', 'Feb-20-2023 12:14:50 PM', 1);
-INSERT INTO `remotes` VALUES (4, 100866, 'Aaron', 'Feb-22-2023 16:00:00 PM', 'Feb-23-2023 04:00:00 AM', 'Asia/Shanghai', 'Feb-21-2023 23:32:39 PM', 1);
-INSERT INTO `remotes` VALUES (5, 100866, 'Aaron', 'Feb-28-2023 15:00:00 PM', 'Mar-01-2023 03:00:00 AM', 'Asia/Shanghai', 'Feb-22-2023 12:26:41 PM', 0);
-INSERT INTO `remotes` VALUES (6, 100866, 'Aaron', 'Feb-24-2023 20:00:00 PM', 'Feb-25-2023 08:00:00 AM', 'Asia/Shanghai', 'Feb-23-2023 10:26:59 AM', 1);
-INSERT INTO `remotes` VALUES (7, 100866, 'Aaron', 'Mar-29-2023 13:00:00 PM', 'Mar-30-2023 00:00:00 AM', 'Asia/Shanghai', 'Feb-23-2023 23:33:38 PM', 0);
-INSERT INTO `remotes` VALUES (8, 100888, 'Kristina', 'Mar-22-2023 14:00:00 PM', 'Mar-23-2023 01:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 12:34:51 PM', 0);
-INSERT INTO `remotes` VALUES (9, 100888, 'Kristina', 'Mar-17-2023 18:00:00 PM', 'Mar-18-2023 05:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 12:34:56 PM', 1);
-INSERT INTO `remotes` VALUES (10, 100888, 'Kristina', 'Mar-30-2023 17:00:00 PM', 'Mar-31-2023 04:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 12:35:00 PM', 1);
-INSERT INTO `remotes` VALUES (11, 123456, 'Kristina', 'Apr-27-2023 12:00:00 PM', 'Apr-27-2023 23:00:00 PM', 'Asia/Shanghai', 'Feb-26-2023 14:21:43 PM', 1);
-INSERT INTO `remotes` VALUES (12, 123456, 'Kristina', 'Dec-31-2022 12:00:00 PM', 'Jan-01-2023 00:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 16:45:37 PM', 0);
-INSERT INTO `remotes` VALUES (13, 123456, 'Kristina', 'Dec-31-2022 12:00:00 PM', 'Jan-01-2023 00:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 16:49:42 PM', 1);
-INSERT INTO `remotes` VALUES (14, 123456, 'Kristina', 'Feb-27-2023 14:00:00 PM', 'Feb-28-2023 02:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 16:57:06 PM', 1);
-INSERT INTO `remotes` VALUES (15, 123456, 'Kristina', 'Feb-28-2023 14:00:00 PM', 'Mar-01-2023 02:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 16:58:45 PM', 1);
-INSERT INTO `remotes` VALUES (16, 123456, 'Kristina', 'Feb-28-2023 15:00:00 PM', 'Mar-01-2023 03:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 17:08:10 PM', 1);
-INSERT INTO `remotes` VALUES (17, 123456, 'Kristina', 'Feb-28-2023 12:00:00 PM', 'Mar-01-2023 00:00:00 AM', 'Asia/Shanghai', 'Feb-26-2023 17:31:45 PM', 1);
-INSERT INTO `remotes` VALUES (18, 123456, 'Kristina', 'Mar-30-2023 05:00:00 AM', 'Mar-30-2023 05:00:00 AM', 'America/Halifax', 'Feb-26-2023 18:08:21 PM', 1);
-INSERT INTO `remotes` VALUES (19, 123456, 'Kristina', 'Mar-16-2023 04:00:00 AM', 'Mar-16-2023 04:00:00 AM', 'America/Halifax', 'Feb-26-2023 18:09:05 PM', 1);
-INSERT INTO `remotes` VALUES (20, 123456, 'Kristina', 'Mar-24-2023 03:00:00 AM', 'Mar-24-2023 03:00:00 AM', 'America/Halifax', 'Feb-26-2023 18:09:50 PM', 1);
-INSERT INTO `remotes` VALUES (21, 123456, 'Kristina', 'Feb-28-2023 03:00:00 AM', 'Feb-28-2023 03:00:00 AM', 'America/Halifax', 'Feb-26-2023 18:10:32 PM', 1);
-INSERT INTO `remotes` VALUES (22, 123456, 'Kristina', 'Feb-28-2023 03:00:00 AM', 'Feb-28-2023 03:00:00 AM', 'America/Halifax', 'Feb-26-2023 18:11:00 PM', 1);
-INSERT INTO `remotes` VALUES (23, 123456, 'Kristina', 'Mar-24-2023 05:00:00 AM', 'Mar-24-2023 05:00:00 AM', 'America/Halifax', 'Feb-26-2023 18:19:54 PM', 1);
-INSERT INTO `remotes` VALUES (24, 123456, 'Kristina', 'Feb-28-2023 04:00:00 AM', 'Feb-28-2023 04:00:00 AM', 'America/Halifax', 'Feb-26-2023 18:27:14 PM', 1);
-INSERT INTO `remotes` VALUES (25, 123456, 'Kristina', 'Feb-28-2023 05:00:00 AM', 'Feb-28-2023 05:00:00 AM', 'America/Halifax', 'Feb-26-2023 18:28:04 PM', 1);
-COMMIT;
+--
+-- Dumping data for table `remotes`
+--
 
-SET FOREIGN_KEY_CHECKS = 1;
+LOCK TABLES `remotes` WRITE;
+/*!40000 ALTER TABLE `remotes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `remotes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tokens`
+--
+
+DROP TABLE IF EXISTS `tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tokens` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `token` varchar(255) DEFAULT NULL,
+  `agentName` varchar(255) DEFAULT NULL,
+  `ticketNum` varchar(255) DEFAULT NULL,
+  `submitTime` varchar(255) DEFAULT NULL,
+  `rerubmitTime` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tokens`
+--
+
+LOCK TABLES `tokens` WRITE;
+/*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-03-02 17:16:41

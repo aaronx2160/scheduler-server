@@ -98,8 +98,8 @@ function Client() {
     setOfficeHours([]);
     postDateSlected(dateStr, userTimeZone).then((data) => {
       console.log(data);
-      // setAgent(data.agentNameParam)
-      // setTicketNum(data.ticketNumParam)
+      setAgent(data.agentNameParam);
+      setTicketNum(data.ticketNumParam);
       setOfficeHours(data.officeHoursConverted);
       setOpen(true);
     });
