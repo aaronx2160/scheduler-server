@@ -82,7 +82,7 @@ const api = (app) => {
   });
 
   //login page, get agents list
-  app.get("/agents", async (req, res) => {
+  app.get("/agents", (req, res) => {
     try {
       const sql = "select * from agents";
       conn(sql, [], (err, ress) => {
@@ -117,18 +117,23 @@ const api = (app) => {
     }
   });
   //initial page load
-  app.post("/initialData", async (req, res) => {
+  app.post("/initialData", (req, res) => {
     try {
-      const { token } = req.body;
+      let { token } = req.body;
+      console.log(token);
+      if (Object(token).length === 0) {
+        token["token"] = "dummy";
+      }
+
       let sql = "select * from tokens where token =? and agentName =?";
-      conn(sql, [token, agentNameParam], (err, ress) => {
+      conn(sql, [token["token"], agentNameParam], (err, ress) => {
         if (err) {
           console.log(err);
         } else {
           if (ress.length > 0) {
             res.send({ agentNameParam, ticketNumParam, token });
           } else {
-            const token = generateToken();
+            const newToken = generateToken();
             const tokenCreateTime = Date.now();
             const sqll = "insert into tokens (??,??,??,??) values(?,?,?,?);";
             conn(
@@ -138,16 +143,16 @@ const api = (app) => {
                 "agentName",
                 "ticketNum",
                 "submitTime",
-                token,
+                newToken,
                 agentNameParam,
                 ticketNumParam,
                 tokenCreateTime,
               ],
-              (err, ress) => {
-                if (err) {
-                  console.log(err);
+              (errr, resss) => {
+                if (errr) {
+                  console.log(errr);
                 } else {
-                  res.send({ agentNameParam, ticketNumParam, token });
+                  res.send({ agentNameParam, ticketNumParam, token: newToken });
                 }
               }
             );

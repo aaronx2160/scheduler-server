@@ -65,7 +65,7 @@ function Client() {
   React.useEffect(() => {
     let timeZone = dayjs.tz.guess();
     setUserTimeZone(timeZone);
-    getInitialData({ token: cookies.token }).then((data) => {
+    getInitialData(cookies.token).then((data) => {
       console.log(data);
       setAgent(data.agentNameParam);
       setTicketNum(data.ticketNumParam);
