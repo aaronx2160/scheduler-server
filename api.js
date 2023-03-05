@@ -105,8 +105,8 @@ const api = (app) => {
         token["token"] = "dummy";
       }
 
-      let sql = "select * from tokens where token =? and agentName =?";
-      conn(sql, [token["token"], agentNameParam], (err, ress) => {
+      let sql = "select * from tokens where token =?;";
+      conn(sql, [token["token"]], (err, ress) => {
         if (err) {
           console.log(err);
         } else {
