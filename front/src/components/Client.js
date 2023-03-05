@@ -70,8 +70,6 @@ function Client() {
       setAgent(data.agentNameParam);
       setTicketNum(data.ticketNumParam);
       setCookie("token", data.token, { path: "/", maxAge: 3600 });
-      setAgent("Aaron");
-      setTicketNum("123456");
     });
   }, []);
 

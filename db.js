@@ -1,5 +1,5 @@
 const mysql = require("mysql");
-const pool = mysql.createPool(require("./key.json"));
+const pool = mysql.createPool(require("./keyLocal.json"));
 
 module.exports = function (sql, placeHolder, callback) {
   pool.getConnection(function (conn_err, conn) {

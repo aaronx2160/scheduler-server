@@ -26,8 +26,8 @@ const officeHoursStr = [
   "19",
   "20",
 ];
-let agentNameParam = "";
-let ticketNumParam = "";
+let agentNameParam = "Aaron";
+let ticketNumParam = "343434";
 
 const api = (app) => {
   app.get("/page/*", async (req, res) => {
@@ -42,42 +42,23 @@ const api = (app) => {
     agentNameParam = "";
     ticketNumParam = "";
     try {
-      agentNameParam = req.params.agentName;
-      ticketNumParam = req.params.ticketNum;
-      let currentTime = Date();
-      const selectAllTokensSql = "select * from tokens";
-      conn(selectAllTokensSql, [], (selectAllTokensErr, selectAllTokensRes) => {
-        if (selectAllTokensErr) {
-          console.log(selectAllTokensErr);
+      // agentNameParam = req.params.agentName;
+      // ticketNumParam = req.params.ticketNum;
+      agentNameParam = "Aaron";
+      ticketNumParam = "343434";
+      const deleteTokenSql =
+        "DELETE FROM tokens WHERE submitTime < NOW() - INTERVAL 1 DAY;";
+      conn(deleteTokenSql, [], (err, ress) => {
+        if (err) {
+          console.log(err);
           res.sendFile(path.join(__dirname, "build", "index.html"));
         } else {
-          if (selectAllTokensRes.length > 0) {
-            console.log(1);
-            selectAllTokensRes.map((item) => {
-              if (currentTime - item["submitTime"] > 86400000) {
-                console.log(2);
-                const delOldTokensSql = "delete from tokens where id =?";
-                conn(
-                  delOldTokensSql,
-                  [item["id"]],
-                  (delOldTokensErr, delOldTokensRes) => {
-                    if (delOldTokensErr) {
-                      console.log(delOldTokensErr);
-                    }
-                  }
-                );
-              }
-            });
-            console.log(3);
-            res.sendFile(path.join(__dirname, "build", "index.html"));
-          } else {
-            console.log(4);
-            res.sendFile(path.join(__dirname, "build", "index.html"));
-          }
+          res.sendFile(path.join(__dirname, "build", "index.html"));
         }
       });
     } catch (error) {
       console.log(error);
+      res.sendFile(path.join(__dirname, "build", "index.html"));
     }
   });
 
@@ -119,7 +100,7 @@ const api = (app) => {
   //initial page load
   app.post("/initialData", (req, res) => {
     try {
-      let { token } = req.body;
+      let token = req.body;
       console.log(token);
       if (Object(token).length === 0) {
         token["token"] = "dummy";
@@ -131,22 +112,20 @@ const api = (app) => {
           console.log(err);
         } else {
           if (ress.length > 0) {
-            res.send({ agentNameParam, ticketNumParam, token });
+            res.send({ agentNameParam, ticketNumParam, token: token["token"] });
           } else {
             const newToken = generateToken();
-            const tokenCreateTime = Date.now();
-            const sqll = "insert into tokens (??,??,??,??) values(?,?,?,?);";
+            // const tokenCreateTime = Date.now();
+            const sqll = "insert into tokens (??,??,??) values(?,?,?);";
             conn(
               sqll,
               [
                 "token",
                 "agentName",
                 "ticketNum",
-                "submitTime",
                 newToken,
                 agentNameParam,
                 ticketNumParam,
-                tokenCreateTime,
               ],
               (errr, resss) => {
                 if (errr) {
@@ -174,10 +153,15 @@ const api = (app) => {
 
       officeHoursConverted.length = 0;
       let d = 0;
-
-      clientTime.get("date") > halifaxTime.get("date")
-        ? (d = halifaxTime.get("date") + 1)
-        : (d = halifaxTime.get("date"));
+      if (
+        clientTime.get("year") > halifaxTime.get("year") ||
+        clientTime.get("month") > halifaxTime.get("month") ||
+        clientTime.get("date") > halifaxTime.get("date")
+      ) {
+        d = halifaxTime.get("date") + 1;
+      } else {
+        d = halifaxTime.get("date");
+      }
 
       let month = parseInt(halifaxTime.get("month") + 1);
       let year = halifaxTime.get("year");

@@ -58,6 +58,10 @@ class Agent extends React.Component {
     const unconfirmedArr = [];
     const data = await getRemotes(agentName);
     data.forEach((remoteObj) => {
+      let receivedDateStr = new Date(
+        parseInt(remoteObj.timeReceived)
+      ).toLocaleString();
+      remoteObj.timeReceived = receivedDateStr;
       if (remoteObj.status === 0) {
         unconfirmedArr.push(remoteObj);
       } else {
@@ -66,7 +70,6 @@ class Agent extends React.Component {
     });
 
     if (unconfirmedArr.length > unconfirmedLength) {
-      console.log(">");
       document.title = "\uD83D\uDD34 New remote";
       const audio = new Audio(require("../audio/alert.wav"));
       await audio.play();
@@ -74,7 +77,7 @@ class Agent extends React.Component {
       document.title = "\uD83D\uDD34 Unconfirmed remote(s)";
     } else document.title = "Sophos Home Scheduler";
     await this.setState({ unconfirmedLength: unconfirmedArr.length });
-    console.log("hi");
+
     return [...unconfirmedArr, ...confirmedArr];
   };
   handleConfirm = (data) => {
@@ -220,7 +223,7 @@ class Agent extends React.Component {
         >
           <Box sx={style}>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Remote confirmation email sent to tkt#
+              Please let cx know via email the remote is now confirmed!
               {rowData ? rowData.ticketNum : ""}
             </Typography>
             <Button

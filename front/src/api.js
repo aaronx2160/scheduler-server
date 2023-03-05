@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// axios.defaults.baseURL = "http://192.168.9.43:4000/";
-axios.defaults.baseURL = "http://18.190.152.23/";
+axios.defaults.baseURL = "http://192.168.9.43:4000/";
+// axios.defaults.baseURL = "http://18.190.152.23/";
 
 export const getInitialData = (token) =>
   axios
