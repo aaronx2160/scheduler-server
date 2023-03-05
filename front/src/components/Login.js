@@ -41,7 +41,7 @@ const Login = () => {
             return
         }
         login({agent,password}).then(data=>{
-            console.log(data)
+            
             if(data ==="error"){
                 setHidden(false)
                 setPassword('')

@@ -26,8 +26,8 @@ const officeHoursStr = [
   "19",
   "20",
 ];
-let agentNameParam = "Aaron";
-let ticketNumParam = "343434";
+let agentNameParam = "";
+let ticketNumParam = "";
 
 const api = (app) => {
   app.get("/page/*", async (req, res) => {
@@ -42,10 +42,9 @@ const api = (app) => {
     agentNameParam = "";
     ticketNumParam = "";
     try {
-      // agentNameParam = req.params.agentName;
-      // ticketNumParam = req.params.ticketNum;
-      agentNameParam = "Aaron";
-      ticketNumParam = "343434";
+      agentNameParam = req.params.agentName;
+      ticketNumParam = req.params.ticketNum;
+
       const deleteTokenSql =
         "DELETE FROM tokens WHERE submitTime < NOW() - INTERVAL 1 DAY;";
       conn(deleteTokenSql, [], (err, ress) => {
@@ -115,7 +114,7 @@ const api = (app) => {
             res.send({ agentNameParam, ticketNumParam, token: token["token"] });
           } else {
             const newToken = generateToken();
-            // const tokenCreateTime = Date.now();
+
             const sqll = "insert into tokens (??,??,??) values(?,?,?);";
             conn(
               sqll,

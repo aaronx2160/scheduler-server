@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import { getRemotes, postRemoteStatus, searchTicketPost } from "../api";
 import { style } from "./Style";
-import dayjs from "dayjs";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -72,7 +71,11 @@ class Agent extends React.Component {
     if (unconfirmedArr.length > unconfirmedLength) {
       document.title = "\uD83D\uDD34 New remote";
       const audio = new Audio(require("../audio/alert.wav"));
-      await audio.play();
+      try {
+        await audio.play();
+      } catch (error) {
+        //console.log(error);
+      }
     } else if (unconfirmedArr.length > 0) {
       document.title = "\uD83D\uDD34 Unconfirmed remote(s)";
     } else document.title = "Sophos Home Scheduler";
@@ -82,13 +85,11 @@ class Agent extends React.Component {
   };
   handleConfirm = (data) => {
     return () => {
-      console.log(data);
       this.setState({ rowData: data, open: true });
     };
   };
 
   handleDone = async () => {
-    console.log(this.state.rowData);
     let { id } = this.state.rowData;
     const { status } = await postRemoteStatus(id);
     if (status === "ok") {
@@ -121,7 +122,7 @@ class Agent extends React.Component {
       } else {
         this.setState({ hidden: true, rows: data });
       }
-      console.log(data);
+      
     });
   };
   handleSignOut = () => {
@@ -223,7 +224,7 @@ class Agent extends React.Component {
         >
           <Box sx={style}>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Please let cx know via email the remote is now confirmed!
+              Please let cx know via email the remote is now confirmed! Ticket#:
               {rowData ? rowData.ticketNum : ""}
             </Typography>
             <Button

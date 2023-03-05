@@ -26,6 +26,7 @@ import { useCookies } from "react-cookie";
 dayjs.extend(timezone);
 
 const calendarStyle = {
+  marginTop: "5%",
   position: "absolute",
   top: "30%",
   left: "50%",
@@ -66,7 +67,6 @@ function Client() {
     let timeZone = dayjs.tz.guess();
     setUserTimeZone(timeZone);
     getInitialData(cookies.token).then((data) => {
-      console.log(data);
       setAgent(data.agentNameParam);
       setTicketNum(data.ticketNumParam);
       setCookie("token", data.token, { path: "/", maxAge: 3600 });
@@ -76,12 +76,10 @@ function Client() {
   const handleDateChange = (newDate) => {
     setHidden(true);
     setDate(newDate);
-    console.log(cookies.token);
     let dateStr = newDate.$d.toString();
     setDateSliced(dateStr.slice(0, 15));
     setOfficeHours([]);
     postDateSlected(dateStr, userTimeZone).then((data) => {
-      console.log(data);
       setAgent(data.agentNameParam);
       setTicketNum(data.ticketNumParam);
       setOfficeHours(data.officeHoursConverted);
