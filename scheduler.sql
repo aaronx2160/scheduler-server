@@ -57,7 +57,7 @@ CREATE TABLE `remotes` (
   `timeReceived` varchar(255) DEFAULT NULL,
   `status` int DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,6 +66,7 @@ CREATE TABLE `remotes` (
 
 LOCK TABLES `remotes` WRITE;
 /*!40000 ALTER TABLE `remotes` DISABLE KEYS */;
+INSERT INTO `remotes` VALUES (1,343434,'Aaron','Mar-22-2023 16:00:00 PM','Mar-22-2023 16:00:00 PM','America/Halifax','1677985306093',0);
 /*!40000 ALTER TABLE `remotes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,10 +82,10 @@ CREATE TABLE `tokens` (
   `token` varchar(255) DEFAULT NULL,
   `agentName` varchar(255) DEFAULT NULL,
   `ticketNum` varchar(255) DEFAULT NULL,
-  `submitTime` varchar(255) DEFAULT NULL,
+  `submitTime` datetime DEFAULT CURRENT_TIMESTAMP,
   `rerubmitTime` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,6 +94,7 @@ CREATE TABLE `tokens` (
 
 LOCK TABLES `tokens` WRITE;
 /*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
+INSERT INTO `tokens` VALUES (1,'fde4f31c245c69be6c92a560f606e053','Aaron','343434','2023-03-04 22:01:35',NULL);
 /*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -105,4 +107,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-02 17:16:41
+-- Dump completed on 2023-03-04 22:22:24
