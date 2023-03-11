@@ -83,6 +83,16 @@ export const postRemoteStatus = (id) =>
       console.log(err);
     });
 
+export const changePswdPost = (data) =>
+  axios
+    .post("changePassword", data)
+    .then((data) => {
+      return data.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
 export const testApi = () =>
   axios
     .get("test")

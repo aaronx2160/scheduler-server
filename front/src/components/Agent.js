@@ -16,7 +16,12 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-import { getRemotes, postRemoteStatus, searchTicketPost } from "../api";
+import {
+  getRemotes,
+  postRemoteStatus,
+  searchTicketPost,
+  changePswdPost,
+} from "../api";
 import { style } from "./Style";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -36,6 +41,9 @@ class Agent extends React.Component {
     updateInterval: null,
     hidden: true,
     unconfirmedLength: 0,
+    pswdOpen: false,
+    pswdErr: "",
+    pswdErrShow: false,
   };
 
   async componentDidMount() {
@@ -73,9 +81,7 @@ class Agent extends React.Component {
       const audio = new Audio(require("../audio/alert.wav"));
       try {
         await audio.play();
-      } catch (error) {
-        //console.log(error);
-      }
+      } catch (error) {}
     } else if (unconfirmedArr.length > 0) {
       document.title = "\uD83D\uDD34 Unconfirmed remote(s)";
     } else document.title = "Sophos Home Scheduler";
@@ -120,17 +126,79 @@ class Agent extends React.Component {
       if (data.length < 1) {
         this.setState({ hidden: false, rows: [] });
       } else {
+        console.log(data);
+
+        data.forEach((remoteObj) => {
+          let receivedDateStr = new Date(
+            parseInt(remoteObj.timeReceived)
+          ).toLocaleString();
+          remoteObj.timeReceived = receivedDateStr;
+        });
+
         this.setState({ hidden: true, rows: data });
       }
-      
     });
+  };
+
+  handlePswdSubmit = async (event) => {
+    const { agent } = this.state;
+    const { handlePswdErr } = this;
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    const oldPswd = data.get("oldPswd").trim();
+    const newPswd = data.get("newPswd").trim();
+    const newPswdMatch = data.get("newPswdMatch").trim();
+    if (oldPswd === "" || newPswd === "") {
+      handlePswdErr("Error: the fileds can't be empty");
+      return;
+    }
+    if (newPswd.length < 6) {
+      handlePswdErr("Error: New password should be at least 6 characters");
+      return;
+    }
+    if (newPswd !== newPswdMatch) {
+      handlePswdErr("Error: New password does not match");
+      return;
+    }
+
+    changePswdPost({ agent, oldPswd, newPswd, newPswdMatch }).then((res) => {
+      console.log(res);
+      if (res.msg !== "ok") {
+        handlePswdErr(res.msg);
+      } else {
+        handlePswdErr(res.msg);
+        setTimeout(() => {
+          this.setState({ pswdOpen: false });
+        }, 3000);
+      }
+    });
+  };
+  handlePswdErr = (err) => {
+    if (err !== "") {
+      this.setState({ pswdErr: err });
+      this.setState({ pswdErrShow: true });
+      setTimeout(() => {
+        this.setState({ pswdErr: "" });
+        this.setState({ pswdErrShow: false });
+      }, 3000);
+    }
   };
   handleSignOut = () => {
     localStorage.setItem("agent", "");
     window.history.back();
   };
   render() {
-    const { rows, open, rowData, agent, hidden } = this.state;
+    const {
+      rows,
+      open,
+      rowData,
+      agent,
+      hidden,
+      pswdOpen,
+      pswdErr,
+      pswdErrShow,
+    } = this.state;
     return (
       <div>
         <Card style={{ width: "80%", margin: "2% auto" }}>
@@ -152,10 +220,27 @@ class Agent extends React.Component {
             <Grid item xs={4} md={4}>
               <Item>
                 <button
-                  style={{ borderWidth: "0", color: "#E4A11B" }}
+                  style={{
+                    borderWidth: "0",
+                    color: "white",
+                    backgroundColor: "#00a152",
+                    borderRadius: "5px",
+                  }}
+                  onClick={() => this.setState({ pswdOpen: true })}
+                >
+                  PASSWORD
+                </button>
+                <button
+                  style={{
+                    borderWidth: "0",
+                    color: "white",
+                    backgroundColor: "#b26500",
+                    marginLeft: "5px",
+                    borderRadius: "5px",
+                  }}
                   onClick={this.handleSignOut}
                 >
-                  Sign out
+                  SIGN OUT
                 </button>
               </Item>
             </Grid>
@@ -236,6 +321,85 @@ class Agent extends React.Component {
             >
               Done
             </Button>
+          </Box>
+        </Modal>
+        <Modal
+          open={pswdOpen}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            sx={[
+              style,
+              {
+                "& .MuiTextField-root": {
+                  m: 1,
+                  width: "25ch",
+                  display: "flex",
+                  flexDirection: "column",
+                  margin: "0 auto",
+                },
+              },
+            ]}
+            component="form"
+            noValidate
+            autoComplete="off"
+            onSubmit={this.handlePswdSubmit}
+          >
+            <TextField
+              required
+              id="oldPswd"
+              name="oldPswd"
+              label="Old password"
+              size="small"
+              type="password"
+              style={{ marginBottom: "10px" }}
+            />
+            <TextField
+              required
+              id="newPswd"
+              name="newPswd"
+              label="New password"
+              size="small"
+              type="password"
+              style={{ marginBottom: "10px" }}
+            />
+            <TextField
+              required
+              id="newPswdMatch"
+              name="newPswdMatch"
+              label="New password again"
+              size="small"
+              type="password"
+              style={{ marginBottom: "10px" }}
+            />
+            <div style={{ marginLeft: "30%" }}>
+              <Button
+                color="primary"
+                size="small"
+                variant="outlined"
+                type="submit"
+              >
+                Submit
+              </Button>
+              <Button
+                color="warning"
+                size="small"
+                variant="outlined"
+                onClick={() => this.setState({ pswdOpen: false })}
+                style={{ marginLeft: "10px" }}
+              >
+                Cancel
+              </Button>
+            </div>
+            <p
+              style={{
+                color: pswdErr === "ok" ? "green" : "red",
+              }}
+              hidden={!pswdErrShow}
+            >
+              {pswdErr}
+            </p>
           </Box>
         </Modal>
       </div>

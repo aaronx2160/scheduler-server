@@ -364,6 +364,47 @@ const api = (app) => {
     console.log("cleanup");
     res.send("test");
   });
+
+  app.post("/changePassword", (req, res) => {
+    console.log("hi");
+    try {
+      const { agent, oldPswd, newPswd } = req.body;
+      const checkPswdSql = "select * from agents where ??=? and ??=?";
+      conn(
+        checkPswdSql,
+        ["name", agent, "password", oldPswd],
+        (checkPswdErr, checkPswdRes) => {
+          if (checkPswdErr) {
+            console.log(checkPswdErr);
+            res.send({ msg: "failed to save new password, please try again" });
+          } else {
+            if (checkPswdRes < 1) {
+              res.send({ msg: "Old password is incorrect!" });
+            } else {
+              const updatePswdSql = "update agents set ?? =? where ??=?;";
+              conn(
+                updatePswdSql,
+                ["password", newPswd, "name", agent],
+                (updatePswdSqlErr, updatePswdSqlRes) => {
+                  if (updatePswdSqlErr) {
+                    console.log(updatePswdSqlErr);
+                    res.send({
+                      msg: "failed to save new password, please try again",
+                    });
+                  } else {
+                    res.send({ msg: "ok" });
+                  }
+                }
+              );
+            }
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      res.send({ msg: "failed to save new password, please try again" });
+    }
+  });
 };
 
 module.exports = { api };
